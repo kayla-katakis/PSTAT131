@@ -1,0 +1,82 @@
+---
+title: "Homework 1 Kayla Katakis"
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+date: '2023-01-17'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+### ML Main Ideas
+## Question 1
+
+Supervised learning requires a model with both input and output. We use supervised learning for prediction, estimation, and inference. Unsupervised learning models have an input, but the response variable is unknown. In other words, unsupervised models don't have an answer key!
+
+## Question 2
+
+Regression models use quantitative data with a continuous outcome, or numerical values, while classification models are qualitative and typically involve discrete options for the outcome.
+
+## Question 3
+
+2 common metrics for regression ML problems are mean squared error and R-squared values. 2 common metrics for classification ML problems are accuracy and precision.
+
+## Question 4
+
+- Descriptive models are mostly used to visualize trends in data.
+- Predictive models aim to predict the response while minimizing reducible errors.
+- Inferential models look at which predictors are most significant in producing the outcome. They look for relationships between predictor and response.
+
+## Question 5
+- Mechanistic models make assumptions about $f$, and use parameters such as $\beta_0$ and $\beta_1$. You can continue to add and remove parameters to make the model more or less flexible. Empirically-driven models make no assumptions about $f$ and are much more flexible from the start. They tend to require more observations than a mechanistic model. However, both models run the risk overfitting if, in the mechanistic case, there are too many predictors, or, in the empirical case, the models are too flexible.
+- In general, mechanistic models are easier to understand because it's much easier to control the flexibility and increase interpretability by adding or removing parameters. Empirical models are more flexible by default, so they are often less interpretable.
+- In terms of the bias-variance tradeoff, mechanistic models typically have high bias and low variance, while empirically-driven models have low bias and high variance.
+
+## Question 6
+
+The first scenario is predictive because we are looking to predict a response (voting in favor of the candidate) based on a set of predictors (voter profile/data).
+The second scenario is inferential, as we are merely looking for relationships between support for the candidate and personal contact with the candidate rather than trying to predict either as an outcome.
+
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+```
+## Exploratory Data Analysis
+## Exercise 1
+I noticed that the most common highway mileage values range from 25-30 mpg, with 15-20 mpg being the second most common range. This histogram appears to be bimodal.
+```{r}
+data('mpg')
+hist(mpg$hwy, main = 'Histogram of Highway MPG', xlab = 'Highway MPG')
+```
+
+
+##Exercise 2
+There is a clear, positive linear relationship between highway mpg and city mpg. This means that these two variables have a strong correlation and are likely related. 
+```{r}
+ggplot(mpg, aes(hwy,cty)) + geom_point()
+```
+
+
+## Exercise 3
+Lincoln produced the least amount of cars, while dodge produced the most.
+```{r}
+ggplot(mpg, aes(y = fct_infreq(manufacturer)))+ geom_bar()
+```
+
+
+## Exercise 4
+I noticed that there is amn inverse relationship between highway mpg and the number of cylinders. More cylinders = lower highway mileage and vice versa.
+```{r}
+ggplot(mpg, aes(hwy, cyl)) + geom_boxplot(aes(group = cyl)) + geom_jitter(aes(alpha=1))
+```
+
+## Exercise 5
+Each variable has a strong correlation with itself (obviously), but I was surprised that year and city or highway mileage are barely correlated, if at all. I thought that, as a car comes out with newer models, the mileage would be higher, but that is not the case. I also noticed the strong negative correlations between cty/displ, hwy/displ, cty/cyl, and hwy/cyl. None of these surprise me, as it seems intuitive that these variable would have inverse relationships.
+```{r}
+library(corrplot)
+corrplot(cor(mpg[, unlist(lapply(mpg,is.numeric))]), method = 'square', type = 'lower')
+```
+
